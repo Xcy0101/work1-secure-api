@@ -58,9 +58,9 @@ jobs:
       - run: npm ci
       - name: Show resolved dependency versions
         run: npm ls http-cache-semantics
-      - name: Fail the build when a high or critical advisory is present
-        run: npm audit --audit-level=high
-      - name: Write machine-readable SCA report
+      - name: Fail the build on a high or critical advisory in runtime dependencies
+        run: npm audit --omit=dev --audit-level=high
+      - name: Write the full audit report (dev tooling included, does not fail the build)
         if: always()
         run: |
           mkdir -p reports

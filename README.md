@@ -105,7 +105,7 @@ Three jobs run on every push and pull request:
 | Job | Tool | What it does | Fails the build when |
 |---|---|---|---|
 | `sast` | ESLint + `eslint-plugin-security` | static analysis of `src/`, `test/`, `poc/` | a security rule is violated |
-| `sca` | `npm audit` | checks the dependency tree against the advisory database | a high/critical advisory is present |
+| `sca` | `npm audit --omit=dev` | checks the runtime dependency tree against the advisory database | a high/critical advisory is present in a runtime dependency |
 | `test` | `node --test` + `supertest` | API tests and the ReDoS regression test | a test fails |
 
 Both scanners also write JSON reports that are uploaded as workflow artifacts
@@ -113,6 +113,11 @@ Both scanners also write JSON reports that are uploaded as workflow artifacts
 
 > **Note:** the workflow uses `npm ci`, so `package-lock.json` must be committed.
 > Run `npm install` once before the first push.
+
+> **Reproducing the vulnerable state:** `main` always holds the fixed revision.
+> The pre-fix state (guard removed, `http-cache-semantics@4.1.0`) is kept on the
+> `vulnerable` branch, and the workflow runs there as well — that is where the red
+> pipeline and the `GHSA-rc47-6667-2j5j` entry in the SCA log come from.
 
 ### Screenshots
 
