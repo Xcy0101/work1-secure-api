@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main, vulnerable]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Functional tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Run API and security regression tests
+        run: npm test
+
+  sast:
+    name: SAST - ESLint security rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Static analysis (fails on security errors)
+        run: npx eslint src test poc
+      - name: Write machine-readable SAST report
+        if: always()
+        run: |
+          mkdir -p reports
+          npx eslint src test poc -f json -o reports/eslint.json || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sast-report
+          path: reports/eslint.json
+
+  sca:
+    name: SCA - npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Show resolved dependency versions
+        run: npm ls http-cache-semantics
+      - name: Fail the build when a high or critical advisory is present
+        run: npm audit --audit-level=high
+      - name: Write machine-readable SCA report
+        if: always()
+        run: |
+          mkdir -p reports
+          npm audit --json > reports/npm-audit.json || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sca-report
+          path: reports/npm-audit.json

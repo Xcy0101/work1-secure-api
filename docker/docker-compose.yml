@@ -1,0 +1,13 @@
+# Vulnerable observation environment for CVE-2022-25881.
+# http-cache-semantics is pinned to 4.1.0 by package.json.
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: work1-secure-api:vulnerable
+    ports:
+      - '3000:3000'
+    environment:
+      - JWT_SECRET=dev-only-secret-change-me
+      - DB_FILE=/tmp/app.db

@@ -1,0 +1,31 @@
+{
+  "name": "work1-secure-api",
+  "version": "1.0.1",
+  "description": "Work 1: secure REST API (JWT auth, SQLi/XSS safe) plus reproduction and fix of CVE-2022-25881 (ReDoS in http-cache-semantics)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "lint": "eslint src test poc",
+    "audit": "npm audit --audit-level=high",
+    "poc": "node poc/redos-poc.js",
+    "bench": "node poc/bench.js"
+  },
+  "keywords": ["security", "redos", "cve-2022-25881"],
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "better-sqlite3": "12.2.0",
+    "express": "4.19.2",
+    "http-cache-semantics": "4.1.1",
+    "jsonwebtoken": "9.0.2"
+  },
+  "devDependencies": {
+    "eslint": "8.57.0",
+    "eslint-plugin-security": "3.0.1",
+    "supertest": "7.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
