@@ -58,8 +58,8 @@ jobs:
       - run: npm ci
       - name: Show resolved dependency versions
         run: npm ls http-cache-semantics
-      - name: Fail the build on a high or critical advisory in runtime dependencies
-        run: npm audit --omit=dev --audit-level=high
+      - name: Gate on new high or critical advisories in runtime dependencies
+        run: node scripts/audit-gate.js
       - name: Write the full audit report (dev tooling included, does not fail the build)
         if: always()
         run: |
