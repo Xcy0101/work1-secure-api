@@ -111,6 +111,13 @@ Three jobs run on every push and pull request:
 Both scanners also write JSON reports that are uploaded as workflow artifacts
 (`sast-report`, `sca-report`), so the results can be attached to the report.
 
+`.github/audit-allowlist.json` is the one escape hatch: an advisory listed there
+(with a reason and a review date) does not fail the SCA job. It is **empty** in
+this revision — after upgrading express to 4.22.3 and http-cache-semantics to
+4.3.0 the runtime tree reports `found 0 vulnerabilities`, so nothing needs an
+exception. The mechanism is kept because the alternative, once a transitive
+advisory has no fix, is that people switch the gate off altogether.
+
 > **Note:** the workflow uses `npm ci`, so `package-lock.json` must be committed.
 > Run `npm install` once before the first push.
 
@@ -306,13 +313,10 @@ npm run audit   # scripts/audit-gate.js
 * `npm run audit` reports **no unaccepted high or critical advisory**, and the
   pipeline is green.
 
-> `npm audit` on its own still reports three advisories in transitive packages
-> (`body-parser`, `path-to-regexp`, and a second one in
-> `http-cache-semantics`) for which **no patched release exists**. They are
-> listed with a reason and a review date in `.github/audit-allowlist.json`;
-> anything not listed there fails `scripts/audit-gate.js`. Advisories would
-> otherwise keep the pipeline permanently red, which in practice means the gate
-> gets switched off.
+> `npm audit` on its own reports nothing for the runtime tree; the three
+> advisories that appeared before the express upgrade (`body-parser`,
+> `path-to-regexp`, and a second one in `http-cache-semantics`) are fixed by
+> `express@4.22.3` and `http-cache-semantics@4.3.0`, which this revision pins.
 
 | Measurement | Vulnerable (4.1.0) | Fixed (4.1.1 + guard) |
 |---|---|---|

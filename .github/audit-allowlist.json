@@ -1,29 +1,4 @@
 {
-  "$comment": "Advisories accepted for the runtime dependency tree, with the reason and the date of the review. Anything not listed here fails scripts/audit-gate.js. Reviewed 2026-10-27.",
-  "accepted": [
-    {
-      "ghsa": "GHSA-v422-hmwv-36x6",
-      "package": "body-parser",
-      "reason": "no patched release in the 1.20.x line that express 4 depends on; the advisory is about a silently disabled size limit and this API sets an explicit 10 KB JSON limit",
-      "reviewed": "2026-10-27"
-    },
-    {
-      "ghsa": "GHSA-27r3-jxmh-p828",
-      "package": "body-parser",
-      "reason": "same package, trailing bytes after a compressed body; the service never accepts compressed request bodies (no content-encoding support is negotiated)",
-      "reviewed": "2026-10-27"
-    },
-    {
-      "ghsa": "GHSA-37ch-88jc-xwx2",
-      "package": "path-to-regexp",
-      "reason": "no patched 0.1.x release; exploitation needs attacker-controlled route patterns, and every route of this service is a static literal",
-      "reviewed": "2026-10-27"
-    },
-    {
-      "ghsa": "GHSA-ch52-4w7c-c8xp",
-      "package": "http-cache-semantics",
-      "reason": "max-stale cross-user disclosure, no fix released for 4.1.1; the endpoint under study only inspects the policy and never stores or replays a response",
-      "reviewed": "2026-10-27"
-    }
-  ]
+  "$comment": "Advisories accepted for the runtime dependency tree, with a reason and the date of the review. Anything not listed here fails scripts/audit-gate.js. The list is EMPTY in the submitted revision: after upgrading express to 4.22.3 and http-cache-semantics to 4.3.0 the runtime tree reports no high or critical advisory at all. The mechanism is kept as a safety valve, so that a future transitive advisory can be accepted explicitly instead of the whole gate being switched off. Reviewed 2026-10-27.",
+  "accepted": []
 }
