@@ -7,7 +7,7 @@
     "start": "node src/server.js",
     "test": "node --test",
     "lint": "eslint src test poc",
-    "audit": "npm audit --omit=dev --audit-level=high",
+    "audit": "node scripts/audit-gate.js",
     "poc": "node poc/redos-poc.js",
     "bench": "node poc/bench.js"
   },
